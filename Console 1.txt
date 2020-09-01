@@ -1,0 +1,266 @@
+> head(data)
+  X1000025 X5 X1 X1.1 X1.2 X2 X1.3 X3 X1.4 X1.5 X2.1
+1  1002945  5  4    4    5  7   10  3    2    1    2
+2  1015425  3  1    1    1  2    2  3    1    1    2
+3  1016277  6  8    8    1  3    4  3    7    1    2
+4  1017023  4  1    1    3  2    1  3    1    1    2
+5  1017122  8 10   10    8  7   10  9    7    1    4
+6  1018099  1  1    1    1  2   10  3    1    1    2
+> summary(data)
+    X1000025              X5               X1              X1.1             X1.2              X2              X1.3    
+ Min.   :   61634   Min.   : 1.000   Min.   : 1.000   Min.   : 1.000   Min.   : 1.000   Min.   : 1.000   1      :401  
+ 1st Qu.:  870258   1st Qu.: 2.000   1st Qu.: 1.000   1st Qu.: 1.000   1st Qu.: 1.000   1st Qu.: 2.000   10     :132  
+ Median : 1171710   Median : 4.000   Median : 1.000   Median : 1.000   Median : 1.000   Median : 2.000   2      : 30  
+ Mean   : 1071807   Mean   : 4.417   Mean   : 3.138   Mean   : 3.211   Mean   : 2.809   Mean   : 3.218   5      : 30  
+ 3rd Qu.: 1238354   3rd Qu.: 6.000   3rd Qu.: 5.000   3rd Qu.: 5.000   3rd Qu.: 4.000   3rd Qu.: 4.000   3      : 28  
+ Max.   :13454352   Max.   :10.000   Max.   :10.000   Max.   :10.000   Max.   :10.000   Max.   :10.000   8      : 21  
+                                                                                                         (Other): 56  
+       X3              X1.4            X1.5            X2.1      
+ Min.   : 1.000   Min.   : 1.00   Min.   : 1.00   Min.   :2.000  
+ 1st Qu.: 2.000   1st Qu.: 1.00   1st Qu.: 1.00   1st Qu.:2.000  
+ Median : 3.000   Median : 1.00   Median : 1.00   Median :2.000  
+ Mean   : 3.438   Mean   : 2.87   Mean   : 1.59   Mean   :2.691  
+ 3rd Qu.: 5.000   3rd Qu.: 4.00   3rd Qu.: 1.00   3rd Qu.:4.000  
+ Max.   :10.000   Max.   :10.00   Max.   :10.00   Max.   :4.000  
+                                                                 
+> colnames(data) <- c("ID", "CT", "USize", "UShape", "MA", "SECS","BN", "BC", "NN", "M", "Diagnosis")
+> head(data)
+       ID CT USize UShape MA SECS BN BC NN M Diagnosis
+1 1002945  5     4      4  5    7 10  3  2 1         2
+2 1015425  3     1      1  1    2  2  3  1 1         2
+3 1016277  6     8      8  1    3  4  3  7 1         2
+4 1017023  4     1      1  3    2  1  3  1 1         2
+5 1017122  8    10     10  8    7 10  9  7 1         4
+6 1018099  1     1      1  1    2 10  3  1 1         2
+> data$outcome[data$Diagnosis==4] = 1
+> data$outcome[data$Diagnosis==2] = 0
+> data$outcome = as.integer(data$outcome)
+> head(data)
+       ID CT USize UShape MA SECS BN BC NN M Diagnosis outcome
+1 1002945  5     4      4  5    7 10  3  2 1         2       0
+2 1015425  3     1      1  1    2  2  3  1 1         2       0
+3 1016277  6     8      8  1    3  4  3  7 1         2       0
+4 1017023  4     1      1  3    2  1  3  1 1         2       0
+5 1017122  8    10     10  8    7 10  9  7 1         4       1
+6 1018099  1     1      1  1    2 10  3  1 1         2       0
+> data$ID <- NULL
+> head(data)
+  CT USize UShape MA SECS BN BC NN M Diagnosis outcome
+1  5     4      4  5    7 10  3  2 1         2       0
+2  3     1      1  1    2  2  3  1 1         2       0
+3  6     8      8  1    3  4  3  7 1         2       0
+4  4     1      1  3    2  1  3  1 1         2       0
+5  8    10     10  8    7 10  9  7 1         4       1
+6  1     1      1  1    2 10  3  1 1         2       0
+> data$BN <- NULL
+> head(data)
+  CT USize UShape MA SECS BC NN M Diagnosis outcome
+1  5     4      4  5    7  3  2 1         2       0
+2  3     1      1  1    2  3  1 1         2       0
+3  6     8      8  1    3  3  7 1         2       0
+4  4     1      1  3    2  3  1 1         2       0
+5  8    10     10  8    7  9  7 1         4       1
+6  1     1      1  1    2  3  1 1         2       0
+> set.seed(123)
+> split = sample.split(data, SplitRatio = 0.8)
+Error in sample.split(data, SplitRatio = 0.8) : 
+  could not find function "sample.split"
+> library(caTools)
+> split = sample.split(data, SplitRatio = 0.8)
+> training_set = subset(data, split == TRUE)
+> test_set = subset(data, split == FALSE)
+> head(training_set)
+  CT USize UShape MA SECS BC NN M Diagnosis outcome
+1  5     4      4  5    7  3  2 1         2       0
+2  3     1      1  1    2  3  1 1         2       0
+3  6     8      8  1    3  3  7 1         2       0
+4  4     1      1  3    2  3  1 1         2       0
+6  1     1      1  1    2  3  1 1         2       0
+7  2     1      2  1    2  3  1 1         2       0
+> head(test_set)
+   CT USize UShape MA SECS BC NN M Diagnosis outcome
+5   8    10     10  8    7  9  7 1         4       1
+8   2     1      1  1    2  1  1 5         2       0
+15  7     4      6  4    6  4  3 1         4       1
+18 10     7      7  6    4  4  1 2         4       1
+25  5     2      3  4    2  3  6 1         4       1
+28  2     1      1  1    2  2  1 1         2       0
+> ggplot(data, aes(x = outcome)) +
++   geom_bar(aes(fill = "blue")) +
++   ggtitle("Diagnosis of total dataset") +
++   theme(legend.position = "none")
+Error in ggplot(data, aes(x = outcome)) : 
+  could not find function "ggplot"
+> library(ggplot2)
+> ggplot(data, aes(x = outcome)) +
++   geom_bar(aes(fill = "blue")) +
++   ggtitle("Diagnosis of total dataset") +
++   theme(legend.position = "none")
+> ggplot(training_set, aes(x = outcome)) +
++   geom_bar(aes(fill = "blue")) +
++   ggtitle("Diagnosis of training dataset") +
++   theme(legend.position = "none")
+> ggplot(test_set, aes(x = outcome)) +
++   geom_bar(aes(fill = "blue")) +
++   ggtitle("Diagnosis of testing dataset") +
++   theme(legend.position = "none")
+> library(corrplot)
+corrplot 0.84 loaded
+> library(corrgram)
+Registered S3 method overwritten by 'seriation':
+  method         from 
+  reorder.hclust gclus
+> corr_mat <- cor(data[,3:ncol(data)])
+> corrplot(corr_mat, order = "hclust", tl.cex = 1, addrect = 8)
+> pca_res <- prcomp(data[,3:ncol(data)], center = TRUE, scale = TRUE)
+> plot(pca_res, type="l")
+> summary(pca_res)
+Importance of components:
+                         PC1    PC2     PC3     PC4     PC5    PC6     PC7       PC8
+Standard deviation     2.360 0.8777 0.64224 0.61934 0.60456 0.5411 0.45534 7.933e-16
+Proportion of Variance 0.696 0.0963 0.05156 0.04795 0.04569 0.0366 0.02592 0.000e+00
+Cumulative Proportion  0.696 0.7923 0.84385 0.89180 0.93748 0.9741 1.00000 1.000e+00
+> pca_df <- as.data.frame(pca_res$x)
+> ggplot(pca_df, aes(x=PC1, y=PC2, col=data$diagnosis)) + geom_point(alpha=0.5)
+> fitControl <- trainControl(method="cv",
++                            number = 5,
++                            preProcOptions = list(thresh = 0.99),
++                            classProbs = TRUE,
++                            summaryFunction = twoClassSummary)
+Error in trainControl(method = "cv", number = 5, preProcOptions = list(thresh = 0.99),  : 
+  could not find function "trainControl"
+> library(caret)
+Loading required package: lattice
+
+Attaching package: ‘lattice’
+
+The following object is masked from ‘package:corrgram’:
+
+    panel.fill
+
+> fitControl <- trainControl(method="cv",
++                            number = 5,
++                            preProcOptions = list(thresh = 0.99),
++                            classProbs = TRUE,
++                            summaryFunction = twoClassSummary)
+> training_set$outcome = NULL
+> test_set$outcome = NULL
+> training_set$Diagnosis[training_set$Diagnosis == 4] = 1
+> training_set$Diagnosis[training_set$Diagnosis ==2] = 0
+> model_tree = tree(Diagnosis ~ USize + 
++                     UShape +
++                     MA +
++                     SECS +
++                     BC  + 
++                     NN  +
++                     M,
++                   data = training_set)
+> summary(model_tree)
+
+Regression tree:
+tree(formula = Diagnosis ~ USize + UShape + MA + SECS + BC + 
+    NN + M, data = training_set)
+Variables actually used in tree construction:
+[1] "USize"  "NN"     "BC"     "UShape" "MA"    
+Number of terminal nodes:  8 
+Residual mean deviance:  0.03183 = 17.51 / 550 
+Distribution of residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.971800 -0.009091 -0.009091  0.000000  0.028170  0.990900 
+> plot(model_tree, type = "uniform")
+> text(model_tree, pretty = 0, cex=0.8)
+> model_tree_pred_train = predict(model_tree, training_set)
+> model_tree_pred_test = predict(model_tree, test_set)
+> cv.tree(model_tree)
+$size
+[1] 8 6 5 4 3 2 1
+
+$dev
+[1]  29.15626  30.84531  30.90068  33.32741  38.18187  40.36918 127.61596
+
+$k
+[1]      -Inf  1.550265  1.777778  2.548758  4.836228  7.546835 89.838440
+
+$method
+[1] "deviance"
+
+attr(,"class")
+[1] "prune"         "tree.sequence"
+> plot(cv.tree(model_tree))
+> model_tree_prune = prune.tree(model_tree, best = 5)
+> summary(model_tree_prune)
+
+Regression tree:
+snip.tree(tree = model_tree, nodes = c(14L, 6L))
+Variables actually used in tree construction:
+[1] "USize" "NN"    "BC"   
+Number of terminal nodes:  5 
+Residual mean deviance:  0.04048 = 22.38 / 553 
+Distribution of residuals:
+     Min.   1st Qu.    Median      Mean   3rd Qu.      Max. 
+-0.971800 -0.009091 -0.009091  0.000000  0.028170  0.990900 
+> plot(model_tree_prune, type = "uniform")
+> text(model_tree, pretty = 0, cex=0.8)
+> all_pca <- prcomp(data[,1:8], cor=TRUE, scale = TRUE)
+Warning message:
+In prcomp.default(data[, 1:8], cor = TRUE, scale = TRUE) :
+ extra argument ‘cor’ will be disregarded 
+> summary(all_pca)
+Importance of components:
+                          PC1     PC2     PC3     PC4     PC5     PC6     PC7     PC8
+Standard deviation     2.2975 0.86444 0.73379 0.63914 0.61305 0.54619 0.51244 0.30079
+Proportion of Variance 0.6598 0.09341 0.06731 0.05106 0.04698 0.03729 0.03282 0.01131
+Cumulative Proportion  0.6598 0.75323 0.82053 0.87160 0.91858 0.95587 0.98869 1.00000
+> pred_knn = knn(train = training_set[, -9],
++                test = test_set[, -9],
++                cl = training_set[, 9],
++                k = 5)
+Error in knn(train = training_set[, -9], test = test_set[, -9], cl = training_set[,  : 
+  could not find function "knn"
+> library(class, lib.loc = "C:/Program Files/R/R-3.6.3/library")
+> pred_knn = knn(train = training_set[, -9],
++                test = test_set[, -9],
++                cl = training_set[, 9],
++                k = 5)
+> pred_knn
+  [1] 1 0 1 1 0 0 0 1 0 0 1 1 1 1 0 0 1 0 0 1 1 0 0 0 0 1 0 0 0 1 1 0 0 0 1 0 0 1 0 0 1 0 1 1 0 0 0 1 0 0 1 0 0 1 0 0 1 1
+ [59] 1 0 1 1 1 0 0 1 0 0 0 1 0 1 0 0 0 0 0 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 0 0 0 0 0 1 1 0 0
+[117] 0 1 0 0 1 1 0 0 0 0 0 0 0 1 0 1 0 1 0 0 0 0 0 1
+Levels: 0 1
+> cm_knn = table(test_set[, 9], pred_knn)
+> cm_knn
+   pred_knn
+     0  1
+  2 92  3
+  4  2 43
+> plot(cm_knn)
+> SVM = svm(formula = Diagnosis ~ .,
++           data = training_set,
++           type = 'C-classification',
++           kernel = 'linear')
+Error in svm(formula = Diagnosis ~ ., data = training_set, type = "C-classification",  : 
+  could not find function "svm"
+> library(e1071)
+> SVM = svm(formula = Diagnosis ~ .,
++           data = training_set,
++           type = 'C-classification',
++           kernel = 'linear')
+> pred_svm = predict(SVM, newdata = test_set[-9])
+> pred_svm
+  5   8  15  18  25  28  35  38  45  48  55  58  65  68  75  78  85  88  95  98 105 108 115 118 125 128 135 138 145 148 
+  1   0   1   1   0   0   0   1   0   0   1   0   1   1   0   0   1   0   0   1   1   0   0   0   0   1   0   0   0   1 
+155 158 165 168 175 178 185 188 195 198 205 208 215 218 225 228 235 238 245 248 255 258 265 268 275 278 285 288 295 298 
+  1   0   0   0   1   0   0   1   0   0   1   0   1   1   0   0   0   1   0   0   1   0   0   1   0   0   1   1   1   0 
+305 308 315 318 325 328 335 338 345 348 355 358 365 368 375 378 385 388 395 398 405 408 415 418 425 428 435 438 445 448 
+  1   1   1   0   0   1   0   0   0   1   0   1   0   0   0   0   0   0   0   0   0   0   0   0   1   0   1   0   0   0 
+455 458 465 468 475 478 485 488 495 498 505 508 515 518 525 528 535 538 545 548 555 558 565 568 575 578 585 588 595 598 
+  0   0   1   0   0   0   0   1   0   0   0   0   1   0   0   0   0   0   0   0   0   0   1   1   0   0   0   1   0   0 
+605 608 615 618 625 628 635 638 645 648 655 658 665 668 675 678 685 688 695 698 
+  1   1   0   0   0   0   0   0   0   1   0   1   0   1   0   0   0   0   0   1 
+Levels: 0 1
+> cm_svm = table(test_set[, 9], pred_svm)
+> cm_svm
+   pred_svm
+     0  1
+  2 93  2
+  4  3 42

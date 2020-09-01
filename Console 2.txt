@@ -1,0 +1,202 @@
+> head(data)
+  CT USize UShape MA SECS BC NN M Diagnosis outcome
+1  5     4      4  5    7  3  2 1         2       0
+2  3     1      1  1    2  3  1 1         2       0
+3  6     8      8  1    3  3  7 1         2       0
+4  4     1      1  3    2  3  1 1         2       0
+5  8    10     10  8    7  9  7 1         4       1
+6  1     1      1  1    2  3  1 1         2       0
+> split = sample.split(data, SplitRatio = 0.8)
+> training_set = subset(data, split == TRUE)
+> test_set = subset(data, split == FALSE)
+> head(training_set)
+  CT USize UShape MA SECS BC NN M Diagnosis outcome
+2  3     1      1  1    2  3  1 1         2       0
+3  6     8      8  1    3  3  7 1         2       0
+4  4     1      1  3    2  3  1 1         2       0
+5  8    10     10  8    7  9  7 1         4       1
+7  2     1      2  1    2  3  1 1         2       0
+8  2     1      1  1    2  1  1 5         2       0
+> head(test_set)
+   CT USize UShape MA SECS BC NN M Diagnosis outcome
+1   5     4      4  5    7  3  2 1         2       0
+6   1     1      1  1    2  3  1 1         2       0
+11  2     1      1  1    2  2  1 1         2       0
+16  4     1      1  1    2  2  1 1         2       0
+21 10     5      5  3    6  7 10 1         4       1
+26  3     2      1  1    1  2  1 1         2       0
+> training_set$outcome = NULL
+> test_set$outcome = NULL
+> head(training_set)
+  CT USize UShape MA SECS BC NN M Diagnosis
+2  3     1      1  1    2  3  1 1         2
+3  6     8      8  1    3  3  7 1         2
+4  4     1      1  3    2  3  1 1         2
+5  8    10     10  8    7  9  7 1         4
+7  2     1      2  1    2  3  1 1         2
+8  2     1      1  1    2  1  1 5         2
+> head(test_set)
+   CT USize UShape MA SECS BC NN M Diagnosis
+1   5     4      4  5    7  3  2 1         2
+6   1     1      1  1    2  3  1 1         2
+11  2     1      1  1    2  2  1 1         2
+16  4     1      1  1    2  2  1 1         2
+21 10     5      5  3    6  7 10 1         4
+26  3     2      1  1    1  2  1 1         2
+> training_set$Diagnosis <- as.character(training_set$Diagnosis)
+> training_set$Diagnosis <- as.factor(training_set$Diagnosis)
+> regressor = randomForest(x = training_set[9],
++                          y = training_set$Diagnosis,
++                          ntree = 10)
+> y_pred = predict(regressor, newdata = test_set)
+> y_pred
+  1   6  11  16  21  26  31  36  41  46  51  56  61  66  71  76  81  86  91  96 101 106 111 116 121 126 131 136 141 146 
+  2   2   2   2   4   2   2   4   4   4   4   4   2   2   4   2   2   4   2   2   4   4   4   2   2   4   2   2   2   4 
+151 156 161 166 171 176 181 186 191 196 201 206 211 216 221 226 231 236 241 246 251 256 261 266 271 276 281 286 291 296 
+  4   2   2   4   2   2   2   4   4   2   4   4   4   2   4   4   4   4   2   4   4   2   4   4   2   2   2   4   2   2 
+301 306 311 316 321 326 331 336 341 346 351 356 361 366 371 376 381 386 391 396 401 406 411 416 421 426 431 436 441 446 
+  2   2   2   4   2   4   2   4   2   2   2   4   4   4   2   2   4   4   4   2   2   2   2   4   4   2   2   4   2   2 
+451 456 461 466 471 476 481 486 491 496 501 506 511 516 521 526 531 536 541 546 551 556 561 566 571 576 581 586 591 596 
+  2   4   2   4   2   2   2   2   4   2   2   4   2   2   2   2   2   2   2   4   2   2   2   2   4   2   4   4   4   2 
+601 606 611 616 621 626 631 636 641 646 651 656 661 666 671 676 681 686 691 696 
+  2   2   4   2   2   4   2   4   2   2   2   2   2   2   2   2   4   2   4   4 
+Levels: 2 4
+> cm = table(test_set[, 9], y_pred)
+> cm
+   y_pred
+     2  4
+  2 84  0
+  4  0 56
+> plot(cm)
+> data$outcome[data$Diagnosis==4] = malignant
+Error: object 'malignant' not found
+> head(data)
+  CT USize UShape MA SECS BC NN M Diagnosis outcome
+1  5     4      4  5    7  3  2 1         2       0
+2  3     1      1  1    2  3  1 1         2       0
+3  6     8      8  1    3  3  7 1         2       0
+4  4     1      1  3    2  3  1 1         2       0
+5  8    10     10  8    7  9  7 1         4       1
+6  1     1      1  1    2  3  1 1         2       0
+> colnames(data) <- c("ID", "CT", "USize", "UShape", "MA", "SECS","BN", "BC", "NN", "M", "Diagnosis")
+Error in names(x) <- value : 
+  'names' attribute [11] must be the same length as the vector [10]
+> data <- read.csv(choose.files())
+> head(data)
+  X1000025 X5 X1 X1.1 X1.2 X2 X1.3 X3 X1.4 X1.5 X2.1
+1  1002945  5  4    4    5  7   10  3    2    1    2
+2  1015425  3  1    1    1  2    2  3    1    1    2
+3  1016277  6  8    8    1  3    4  3    7    1    2
+4  1017023  4  1    1    3  2    1  3    1    1    2
+5  1017122  8 10   10    8  7   10  9    7    1    4
+6  1018099  1  1    1    1  2   10  3    1    1    2
+> summary(data)
+    X1000025              X5               X1              X1.1             X1.2              X2              X1.3    
+ Min.   :   61634   Min.   : 1.000   Min.   : 1.000   Min.   : 1.000   Min.   : 1.000   Min.   : 1.000   1      :401  
+ 1st Qu.:  870258   1st Qu.: 2.000   1st Qu.: 1.000   1st Qu.: 1.000   1st Qu.: 1.000   1st Qu.: 2.000   10     :132  
+ Median : 1171710   Median : 4.000   Median : 1.000   Median : 1.000   Median : 1.000   Median : 2.000   2      : 30  
+ Mean   : 1071807   Mean   : 4.417   Mean   : 3.138   Mean   : 3.211   Mean   : 2.809   Mean   : 3.218   5      : 30  
+ 3rd Qu.: 1238354   3rd Qu.: 6.000   3rd Qu.: 5.000   3rd Qu.: 5.000   3rd Qu.: 4.000   3rd Qu.: 4.000   3      : 28  
+ Max.   :13454352   Max.   :10.000   Max.   :10.000   Max.   :10.000   Max.   :10.000   Max.   :10.000   8      : 21  
+                                                                                                         (Other): 56  
+       X3              X1.4            X1.5            X2.1      
+ Min.   : 1.000   Min.   : 1.00   Min.   : 1.00   Min.   :2.000  
+ 1st Qu.: 2.000   1st Qu.: 1.00   1st Qu.: 1.00   1st Qu.:2.000  
+ Median : 3.000   Median : 1.00   Median : 1.00   Median :2.000  
+ Mean   : 3.438   Mean   : 2.87   Mean   : 1.59   Mean   :2.691  
+ 3rd Qu.: 5.000   3rd Qu.: 4.00   3rd Qu.: 1.00   3rd Qu.:4.000  
+ Max.   :10.000   Max.   :10.00   Max.   :10.00   Max.   :4.000  
+                                                                 
+> colnames(data) <- c("ID", "CT", "USize", "UShape", "MA", "SECS","BN", "BC", "NN", "M", "Diagnosis")
+> head(data)
+       ID CT USize UShape MA SECS BN BC NN M Diagnosis
+1 1002945  5     4      4  5    7 10  3  2 1         2
+2 1015425  3     1      1  1    2  2  3  1 1         2
+3 1016277  6     8      8  1    3  4  3  7 1         2
+4 1017023  4     1      1  3    2  1  3  1 1         2
+5 1017122  8    10     10  8    7 10  9  7 1         4
+6 1018099  1     1      1  1    2 10  3  1 1         2
+> data$outcome[data$Diagnosis==4] = malignant
+Error: object 'malignant' not found
+> data$outcome[data$Diagnosis==4] = 'malignant'
+> data$outcome[data$Diagnosis==2] = 'benign'
+> data$outcome = as.factor(data$outcome)
+> data$Diagnosis = as.factor(data$Diagnosis)
+> head(data)
+       ID CT USize UShape MA SECS BN BC NN M Diagnosis   outcome
+1 1002945  5     4      4  5    7 10  3  2 1         2    benign
+2 1015425  3     1      1  1    2  2  3  1 1         2    benign
+3 1016277  6     8      8  1    3  4  3  7 1         2    benign
+4 1017023  4     1      1  3    2  1  3  1 1         2    benign
+5 1017122  8    10     10  8    7 10  9  7 1         4 malignant
+6 1018099  1     1      1  1    2 10  3  1 1         2    benign
+> data$ID <- NULL
+> data$BN <- NULL
+> head(data)
+  CT USize UShape MA SECS BC NN M Diagnosis   outcome
+1  5     4      4  5    7  3  2 1         2    benign
+2  3     1      1  1    2  3  1 1         2    benign
+3  6     8      8  1    3  3  7 1         2    benign
+4  4     1      1  3    2  3  1 1         2    benign
+5  8    10     10  8    7  9  7 1         4 malignant
+6  1     1      1  1    2  3  1 1         2    benign
+> set.seed(123)
+> split = sample.split(data, SplitRatio = 0.8)
+> training_set = subset(data, split == TRUE)
+> test_set = subset(data, split == FALSE)
+> head(training_set)
+  CT USize UShape MA SECS BC NN M Diagnosis outcome
+1  5     4      4  5    7  3  2 1         2  benign
+2  3     1      1  1    2  3  1 1         2  benign
+3  6     8      8  1    3  3  7 1         2  benign
+4  4     1      1  3    2  3  1 1         2  benign
+6  1     1      1  1    2  3  1 1         2  benign
+7  2     1      2  1    2  3  1 1         2  benign
+> head(test_set)
+   CT USize UShape MA SECS BC NN M Diagnosis   outcome
+5   8    10     10  8    7  9  7 1         4 malignant
+8   2     1      1  1    2  1  1 5         2    benign
+15  7     4      6  4    6  4  3 1         4 malignant
+18 10     7      7  6    4  4  1 2         4 malignant
+25  5     2      3  4    2  3  6 1         4 malignant
+28  2     1      1  1    2  2  1 1         2    benign
+> training_set$outcome <- as.character(training_set$outcome)
+> training_set$Diagnosis <- as.character(training_set$Diagnosis)
+> training_set$outcome <- as.factor(training_set$outcome)
+> training_set$Diagnosis <- as.factor(training_set$Diagnosis)
+> regressor = randomForest(x = training_set[9],
++                          y = training_set$outcome,
++                          ntree = 10)
+> y_pred = predict(regressor, newdata = test_set)
+> y_pred
+        5         8        15        18        25        28        35        38        45        48        55        58 
+malignant    benign malignant malignant malignant    benign    benign malignant    benign    benign malignant malignant 
+       65        68        75        78        85        88        95        98       105       108       115       118 
+malignant malignant    benign    benign malignant    benign    benign malignant malignant    benign    benign    benign 
+      125       128       135       138       145       148       155       158       165       168       175       178 
+   benign malignant    benign    benign    benign    benign malignant    benign    benign    benign malignant    benign 
+      185       188       195       198       205       208       215       218       225       228       235       238 
+   benign malignant    benign    benign malignant    benign malignant malignant    benign    benign    benign malignant 
+      245       248       255       258       265       268       275       278       285       288       295       298 
+   benign    benign malignant    benign    benign malignant    benign    benign malignant malignant malignant    benign 
+      305       308       315       318       325       328       335       338       345       348       355       358 
+malignant malignant    benign    benign    benign malignant    benign    benign    benign malignant    benign malignant 
+      365       368       375       378       385       388       395       398       405       408       415       418 
+   benign    benign    benign    benign    benign    benign    benign    benign    benign    benign    benign    benign 
+      425       428       435       438       445       448       455       458       465       468       475       478 
+malignant    benign malignant    benign    benign    benign malignant    benign malignant    benign    benign    benign 
+      485       488       495       498       505       508       515       518       525       528       535       538 
+   benign malignant    benign    benign    benign    benign malignant    benign    benign    benign    benign    benign 
+      545       548       555       558       565       568       575       578       585       588       595       598 
+   benign    benign    benign    benign malignant malignant    benign    benign    benign malignant    benign    benign 
+      605       608       615       618       625       628       635       638       645       648       655       658 
+malignant malignant    benign    benign    benign    benign    benign    benign    benign malignant    benign malignant 
+      665       668       675       678       685       688       695       698 
+   benign malignant    benign    benign    benign    benign    benign malignant 
+Levels: benign malignant
+> cm = table(test_set[, 9], y_pred)
+> cm
+   y_pred
+    benign malignant
+  2     95         0
+  4      0        45
